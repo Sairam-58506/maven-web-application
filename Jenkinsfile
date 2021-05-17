@@ -7,7 +7,7 @@ node
   {
    git branch: 'development', credentialsId: '8806318d-29ea-4806-9803-55208a9fc2fb', url: 'https://github.com/Sairam-58506/maven-web-application.git'
   }
-  stage('Build CheckoutCode')
+  stage('Build')
   {
      
    sh "${mavenHome}/bin/mvn clean package"
