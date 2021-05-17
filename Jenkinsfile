@@ -1,54 +1,41 @@
-node ('master')
- {
+node
+{
   
   def mavenHome = tool name: "maven3.8.1"
-  
-      echo "GitHub BranhName ${env.BRANCH_NAME}"
-      echo "Jenkins Job Number ${env.BUILD_NUMBER}"
-      echo "Jenkins Node Name ${env.NODE_NAME}"
-  
-      echo "Jenkins Home ${env.JENKINS_HOME}"
-      echo "Jenkins URL ${env.JENKINS_URL}"
-      echo "JOB Name ${env.JOB_NAME}"
-  
-   properties([[$class: 'JiraProjectProperty'], buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '2', daysToKeepStr: '', numToKeepStr: '2')), pipelineTriggers([pollSCM('* * * * *')])])
-  
-  stage("CheckOutCodeGit")
+  properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')), pipelineTriggers([pollSCM('* * * * *')])])
+  stage('CheckoutCode')
   {
    git branch: 'development', credentialsId: '8806318d-29ea-4806-9803-55208a9fc2fb', url: 'https://github.com/Sairam-58506/maven-web-application.git'
- }
- 
- stage("Build")
- {
- sh "${mavenHome}/bin/mvn clean package"
- }
- 
-  /*
- stage("ExecuteSonarQubeReport")
- {
- sh "${mavenHome}/bin/mvn sonar:sonar"
- }
- 
- stage("UploadArtifactsintoNexus")
- {
- sh "${mavenHome}/bin/mvn deploy"
- }
- 
-  stage("DeployAppTomcat")
- {
-  sshagent(['423b5b58-c0a3-42aa-af6e-f0affe1bad0c']) {
-    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war  ec2-user@15.206.91.239:/opt/apache-tomcat-9.0.34/webapps/" 
   }
- }
- 
- stage('EmailNotification')
- {
- mail bcc: 'devopstrainingblr@gmail.com', body: '''Build is over
+  stage('Build')
+  {
+     
+   sh "${mavenHome}/bin/mvn clean package"
+  }
+  /*
+  stage('ExecuteSonarQubeReport')
+  {
+   sh "${mavenHome}/bin/mvn sonar:sonar"   
+  }
+  stage('UploadArtifactIntoNexus')
+  {
+   sh "${mavenHome}/bin/mvn deploy"      
+  }
+  stage('DeployAppIntoTomcat')
+  {
+   sshagent(['60f47ad5-8098-4c60-b5e2-de66b6a08aac'])
+   {
+    sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@3.238.153.177:/opt/apache-tomcat-9.0.45/webapps/"
+   }
+  }
+  stage('SendEmailNotification')
+  {
+   mail bcc: '', body: '''Build Over...
 
- Thanks,
- Mithun Technologies,
- 9980923226.''', cc: 'devopstrainingblr@gmail.com', from: '', replyTo: '', subject: 'Build is over!!', to: 'devopstrainingblr@gmail.com'
- }
- */
- 
- }
+
+Regards,
+sairam,
+8341832285.''', cc: 'sairamh.299@gmail.com', from: '', replyTo: '', subject: 'Build Over', to: 'sairamnaidu585@gmail.com'
+  }
+  */
+}
